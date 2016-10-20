@@ -1,0 +1,50 @@
+You can control Ax-12A sending an instruction packet directly trough USB2DYNAMIXEL connected using COM port on Matlab. 
+just open the port and see the instruction you want to send.
+the control table can be find in http://support.robotis.com/en/product/dynamixel/ax_series/dxl_ax_actuator.htm
+the structure of the datagram is as it follows.
+-HEADER        0XFF 0XFF The packet MUST start with this. is the header and helps the actuator to identify when a new packet 
+arrives.
+-ID            the next byte is for the ID, which can be from 0 to 253, if you want to control all actuators at once. 
+use 0XFE (254) for broadcasting
+-LENGTH        the length of the packet, just count how many bytes has the packet starting counting from the instruction byte.
+-INSTRUCTION   instruction to send, it can be PING (0X01) READ DATA (0X02) WRITE DATA (0X03) REG WRITE (0X04) ACTION (0X05) 
+RESET (0X06) SYNC WRITE (0X83)
+-PARAMETER     the parameter to be send
+-CHECK SUM     Check Sum = ~ (ID + Length + Instruction + Parameter1 + ... Parameter N)
+
+so here is an example to turn ON/OFF the led of 2 Actuators with ID 1 and ID 2.
+
+function SerialLed()
+s=serial('COM6', 'BaudRate', 1000000, 'Parity','none', 'DataBits', 8, 'StopBits', 1);    
+fopen(s);
+% ID=1 Length=4 Instruction=WRITE(03) Parameter=LED(25) State=ON (01)   
+%-------- [LED 1 On ] ------------------------------
+%FF FF 01 04 03 19 01 DD 
+a = [255, 255, 1, 4, 3, 25, 01, 221];
+%---------------------------------------------------
+% ID=2 Length=4 Instruction=WRITE(03) Parameter=LED(25) State=ON (01)  
+%-------- [LED 2 On ] ------------------------------
+%FF FF 01 04 03 19 01 DD 
+a = [255, 255, 2, 4, 3, 25, 01, 220];
+%---------------------------------------------------
+pause(2)
+% ID=1 Length=4 Instruction=WRITE(03) Parameter=LED(25) State=OFF (00)  
+%-------- [LED 1 Off ] -----------------------------
+%FF FF 01 04 03 19 00 DE 
+a = [255, 255, 1, 4, 3, 25, 00, 222];
+%---------------------------------------------------
+% ID=2 Length=4 Instruction=WRITE(03) Parameter=LED(25) State=OFF (00)  
+%-------- [LED 2 Off ] -----------------------------
+%FF FF 01 04 03 19 00 DE 
+a = [255, 255, 2, 4, 3, 25, 00, 221];
+%---------------------------------------------------
+
+disp(a);
+%write packet on serial port
+fwrite(s, a);     
+disp(out);    
+% Clean up
+fclose(s);
+delete(s);
+clear s;
+end
