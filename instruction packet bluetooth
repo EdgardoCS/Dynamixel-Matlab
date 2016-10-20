@@ -1,0 +1,29 @@
+this one was very tricky to find, when you work with CM-530 and bluetooth module BT-110, if you send an instruction packet like 
+you do when the comunication is serial, CM-530 read the packet but the response packet says nothing 
+(a bunch of 8 32 32 32 8 32 32 32 8...) and the instruction is not execute.
+so, using an sniffer serial monitor, i noticed that when the instruction is executed using roboplus software, the datagram is 
+interpreted in a singular way
+if you send, for example, and instruction to move to goal position 530 to ID1 actuator
+[255 255 001 004 003 030 000 002 223]
+it appears on CM-530 as Write 030 000 002
+so, for using BT-110, the only thing to do is "skip" the datagram and send the instruction as if the CM-530 is the sender
+and for select the working actuator, you only have to call it from its id : cid:001 (ID 01)
+
+function Write_03()
+s=serial('COM3', 'BaudRate', 57600, 'Parity','none', 'DataBits', 8, 'StopBits', 1);    
+fopen(s);
+
+%----MOVE-----%
+d0=('cid:001');
+format='Write %d %d %d');
+d1=030;
+d2=000;
+d3=002;
+%d1=('Write');
+%d2=(' 030 139 002');
+ 
+ s=[d0 d1 d2 d3];
+ fwrite(s,a);
+ 
+ 
+
