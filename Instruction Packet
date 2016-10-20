@@ -1,4 +1,7 @@
-You can control Ax-12A sending an instruction packet directly trough USB2DYNAMIXEL connected using COM port on Matlab. 
+You can control Ax-12A sending an instruction packet directly trough USB2DYNAMIXEL connected using COM port on Matlab.
+this method works with Bioloid's Controller CM-530 (and every CM-5 series) but only connected to USB port via microUSB wire or
+usinf USB2Dynamixel device.
+
 just open the port and see the instruction you want to send.
 the control table can be find in http://support.robotis.com/en/product/dynamixel/ax_series/dxl_ax_actuator.htm
 the structure of the datagram is as it follows.
