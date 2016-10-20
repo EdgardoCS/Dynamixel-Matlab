@@ -1,0 +1,29 @@
+This method only work trough USB2DYNAMIXEL conected directly to AX-12A Servos.
+Using the Dynamixel Library is the easiest way to control the servos, you only have to define the ID of every servo you are using 
+and send the istruction you want to execute.
+in the next example, i control 3 servos of a robotic arm.
+using the dxl_write_word, you write the data
+32 is the instruction for moving speed
+30 is the instruction for goal position
+
+%---------------------------------------------------------------------
+loadlibrary('dynamixel', 'dynamixel.h');
+libfunctions('dynamixel');
+PORT = 6; 
+DEFAULT_BAUDNUM = 1; 
+
+res= calllib ('dynamixel', 'dxl_initialize', PORT, DEFAULT_BAUDNUM);
+
+%**********************ID servos*************************************
+left_shoulder =1;
+left_forearm  =2;
+left_hand     =3;
+
+    calllib ('dynamixel', 'dxl_write_word', lef_shoulder, 32,200);
+    calllib ('dynamixel', 'dxl_write_word', left_shoulder, 30,700);
+    calllib ('dynamixel', 'dxl_write_word', left_forearm, 32,50);
+    calllib ('dynamixel', 'dxl_write_word', left_forearm, 30,180);
+    calllib ('dynamixel', 'dxl_write_word', left_hand, 32,80);
+    calllib ('dynamixel', 'dxl_write_word', left_hand, 30,300);
+      
+            calllib ('dynamixel', 'dxl_terminate');
