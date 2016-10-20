@@ -25,5 +25,4 @@ d3=002;
  s=[d0 d1 d2 d3];
  fwrite(s,a);
  
- 
-
+end
